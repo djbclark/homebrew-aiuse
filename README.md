@@ -4,6 +4,7 @@ Homebrew tap for [`aiuse`](https://github.com/djbclark/aiuse).
 
 ```bash
 brew tap djbclark/aiuse
+brew trust djbclark/aiuse
 brew install aiuse
 ```
 
