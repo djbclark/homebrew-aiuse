@@ -76,6 +76,11 @@ class Aiuse < Formula
     sha256 "231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c"
   end
 
+  bottle do
+    root_url "https://github.com/djbclark/homebrew-aiuse/releases/download/v3.7.2"
+    sha256 cellar: :any, arm64_sequoia: "140d1e96a49c25dc493fce092c1e5aa826d3eab837aef1566cca04d89b5e3769"
+  end
+
   def install
     virtualenv_install_with_resources(using: "python@3.14", system_site_packages: false)
   end

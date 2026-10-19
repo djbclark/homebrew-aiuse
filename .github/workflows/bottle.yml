@@ -47,6 +47,4 @@ jobs:
           git config user.name "bottle-bot"
           git config user.email "actions@users.noreply.github.com"
           brew bottle --merge --write --root-url="$ROOT_URL" *.bottle.json
-          git add "Formula/$FORMULA.rb"
-          git commit -m "$FORMULA: add bottle" -m "Built on GitHub Actions runner ($RUNNER_NAME)."
           git push
