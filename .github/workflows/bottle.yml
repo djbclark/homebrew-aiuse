@@ -1,0 +1,55 @@
+name: bottle
+
+on:
+  workflow_dispatch:
+    inputs:
+      formula:
+        description: Formula to bottle
+        required: true
+        default: aiuse
+
+permissions:
+  contents: write
+
+jobs:
+  bottle:
+    runs-on: macos-15
+    env:
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      FORMULA: ${{ github.event.inputs.formula }}
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Check out tap
+        uses: actions/checkout@v4
+
+      - name: Tap this repository
+        run: |
+          mkdir -p "$(dirname "$(brew --repository djbclark/aiuse)")"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repository djbclark/aiuse)"
+
+      - name: Build bottle
+        run: |
+          brew install --build-bottle "djbclark/aiuse/$FORMULA"
+          brew bottle --json --only-json-tab "djbclark/aiuse/$FORMULA"
+
+      - name: Upload bottle to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="$(brew info --json=v2 "djbclark/aiuse/$FORMULA" | jq -r '.formulae[0].versions.stable')"
+          TAG="v$VERSION"
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "aiuse $VERSION" --notes "Bottles for aiuse $VERSION"
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber *.bottle.tar.gz
+          echo "ROOT_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$TAG" >> "$GITHUB_ENV"
+
+      - name: Merge bottle block into formula
+        run: |
+          git config user.name "bottle-bot"
+          git config user.email "actions@users.noreply.github.com"
+          brew bottle --merge --write --root-url="$ROOT_URL" *.bottle.json
+          git add "Formula/$FORMULA.rb"
+          git commit -m "$FORMULA: add bottle" -m "Built on GitHub Actions runner ($RUNNER_NAME)."
+          git push
