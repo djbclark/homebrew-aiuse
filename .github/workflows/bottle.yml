@@ -40,6 +40,12 @@ jobs:
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "aiuse $VERSION" --notes "Bottles for aiuse $VERSION"
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber *.bottle.tar.gz
+          # brew fetch requests <name>-<version>.<tag>.bottle.tar.gz for this
+          # tap, while brew bottle writes <name>--<version>; ship both names.
+          for f in *.bottle.tar.gz; do
+            cp "$f" "${f/--/-}"
+          done
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber ./*-*.bottle.tar.gz
           echo "ROOT_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$TAG" >> "$GITHUB_ENV"
 
       - name: Merge bottle block into formula
