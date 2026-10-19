@@ -53,4 +53,8 @@ jobs:
           git config user.name "bottle-bot"
           git config user.email "actions@users.noreply.github.com"
           brew bottle --merge --write --root-url="$ROOT_URL" *.bottle.json
+          # --merge may have committed already; only commit/push real changes
+          git pull --rebase
+          git add "Formula/$FORMULA.rb"
+          git diff --cached --quiet || git commit -m "$FORMULA: add bottle"
           git push
