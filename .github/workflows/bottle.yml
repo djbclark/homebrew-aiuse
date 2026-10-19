@@ -18,9 +18,6 @@ jobs:
       HOMEBREW_NO_INSTALL_CLEANUP: "1"
       FORMULA: ${{ github.event.inputs.formula }}
     steps:
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
       - name: Check out tap
         uses: actions/checkout@v4
 
