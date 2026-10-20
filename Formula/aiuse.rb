@@ -3,8 +3,8 @@ class Aiuse < Formula
 
   desc "Aggregate AI subscription quotas and flag use-it-or-lose-it allotments"
   homepage "https://github.com/djbclark/aiuse"
-  url "https://github.com/djbclark/aiuse/archive/refs/tags/v3.7.2.tar.gz"
-  sha256 "5506b9ee53a1359d5b4f85e8e3937b29663e3a4a518b54dd0297be1dad768833"
+  url "https://github.com/djbclark/aiuse/archive/refs/tags/v3.8.0.tar.gz"
+  sha256 "528731cc12ab55a1e26de955aa39f682128dbc9616cd8c9f9ad1e02bd02440ba"
   license "MIT"
   head "https://github.com/djbclark/aiuse.git", branch: "main"
 
@@ -74,11 +74,6 @@ class Aiuse < Formula
   resource "urllib3" do
     url "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e5ee11424ef85419ba0d8ba0b3138bf360be2ff56953/urllib3-2.7.0.tar.gz"
     sha256 "231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c"
-  end
-
-  bottle do
-    root_url "https://github.com/djbclark/homebrew-aiuse/releases/download/v3.7.2"
-    sha256 cellar: :any, arm64_sequoia: "140d1e96a49c25dc493fce092c1e5aa826d3eab837aef1566cca04d89b5e3769"
   end
 
   def install
